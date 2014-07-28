@@ -12,6 +12,8 @@ public abstract class Action {
 	/**
 	 * <=0   => from end back
 	 * 
+	 * in 100th of a second
+	 * 
 	 * @return
 	 * 
 	 */

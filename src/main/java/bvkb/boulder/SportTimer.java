@@ -68,6 +68,7 @@ public class SportTimer {
 		t.cancel();
 		t = new Timer();
 		loadActions();
+		//System.out.println(System.currentTimeMillis());
 	}
 
 	private void loadActions() {
@@ -84,6 +85,7 @@ public class SportTimer {
 
 	public void stop() {
 		t.cancel();
+		stopTime=System.currentTimeMillis();
 		
 	}
 	

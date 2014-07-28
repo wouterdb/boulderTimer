@@ -71,7 +71,7 @@ public class LargeScreen extends JFrame implements ActionListener {
 		int fps = (int) (1000/(now-last));
 		last=now;
 		
-		label.setText(formatTime(source.getTimeLeft()));
+		label.setText(PresentationUtil.formatTime(source.getTimeLeft()));
 		//label.repaint(10);
 	}
 	
@@ -82,9 +82,7 @@ public class LargeScreen extends JFrame implements ActionListener {
 		super.paint(g);
 	}
 
-	private String formatTime(int time) {
-		return String.format("%02d:%02d", time/100,time%100);
-	}
+	
 
 	public void setTimer(SportTimer timer) {
 		this.source=timer;
