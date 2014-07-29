@@ -13,7 +13,12 @@ public class PresentationUtil {
 	public static String formatTime(int time) {
 		//seconds ROUND UP!
 		int seconds = (int)Math.ceil( (time%6000)/100.0 );
-		return String.format("%02d:%02d", time/6000,seconds);
+		int minutes = time/6000;
+		if(seconds==60){
+			seconds=0;
+			minutes++;
+		}
+		return String.format("%02d:%02d", minutes,seconds);
 	}
 	
 	

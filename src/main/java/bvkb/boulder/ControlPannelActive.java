@@ -23,13 +23,15 @@ public class ControlPannelActive extends ControlPannel {
 	private Clip gong;
 	private LargeScreen screen;
 	private Timer refreshtimer;
+	private Clip beep2;
 
 	public ControlPannelActive() throws UnsupportedAudioFileException,
 			IOException, LineUnavailableException {
 		beep = SoundAction.load("beep.wav");
-		System.out.println(beep.getMicrosecondLength());
+		beep2 = SoundAction.load("beep-10.wav");
+		//System.out.println(beep2.getMicrosecondLength());
 		gong = SoundAction.load("bell.wav");
-		font = new Font(getFont().getName(), Font.PLAIN, 100);
+		font = new Font(getFont().getName(), Font.PLAIN, 400);
 		refreshtimer = new Timer(15, new ActionListener() {
 
 			@Override
@@ -55,16 +57,6 @@ public class ControlPannelActive extends ControlPannel {
 	}
 
 	public static void main(String args[]) {
-		/* Set the Nimbus look and feel */
-		// <editor-fold defaultstate="collapsed"
-		// desc=" Look and feel setting code (optional) ">
-		/*
-		 * If Nimbus (introduced in Java SE 6) is not available, stay with the
-		 * default look and feel. For details see
-		 * http://download.oracle.com/javase
-		 * /tutorial/uiswing/lookandfeel/plaf.html
-		 */
-
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
 					.getInstalledLookAndFeels()) {
@@ -113,8 +105,13 @@ public class ControlPannelActive extends ControlPannel {
 
 	@Override
 	protected void start(ActionEvent evt) {
-		if (timer!=null && timer.getTimeLeft() > 0)
-			notifier.setText("already running");
+		if (timer!=null && timer.getTimeLeft() > 0){
+			if(!screen.isVisible())
+				screen.setVisible(true);
+			else
+				notifier.setText("already running");
+		}
+			
 		else
 			try {
 				long time = PresentationUtil
@@ -173,8 +170,10 @@ public class ControlPannelActive extends ControlPannel {
 			timer.stop();
 		timer = new SportTimer(time);
 
-		for (int i = 0; i < warningCount; i++)
+		for (int i = 1; i < warningCount; i++)
 			timer.add(new SoundAction(beep, (int) (time - (warningTime * i))));
+		
+		timer.add(new SoundAction(beep2, time));
 
 		if (time > 6000)
 			timer.add(new SoundAction(gong, time - 6000));

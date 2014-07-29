@@ -45,7 +45,7 @@ public class LargeScreen extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public LargeScreen(SportTimer source) {
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(HIDE_ON_CLOSE );
 		setBounds(100, 100, 450, 300);
 		setExtendedState(getExtendedState()|JFrame.MAXIMIZED_BOTH );
 		contentPane = new JPanel();
@@ -67,9 +67,9 @@ public class LargeScreen extends JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		long now = System.currentTimeMillis();
-		int fps = (int) (1000/(now-last));
-		last=now;
+//		long now = System.currentTimeMillis();
+//		int fps = (int) (1000/(now-last));
+//		last=now;
 		
 		label.setText(PresentationUtil.formatTime(source.getTimeLeft()));
 		//label.repaint(10);
