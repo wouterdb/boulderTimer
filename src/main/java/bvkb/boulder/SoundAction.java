@@ -15,24 +15,7 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
 
 public class SoundAction extends Action{
 
-	public static Clip load(String file) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-		//InputStream inps = .getResourceAsStream(file);
-		
-		URL url = SoundAction.class.getClassLoader().getResource(file);
-
-		AudioInputStream audioInputStream = AudioSystem
-				.getAudioInputStream(url);
-
-		if (audioInputStream == null)
-			throw new IllegalArgumentException("file not found: " + file);
-
-		AudioFormat format = audioInputStream.getFormat();
-		DataLine.Info info = new DataLine.Info(Clip.class, format);
-		Clip m_clip = (Clip) AudioSystem.getLine(info);
-		m_clip.open(audioInputStream);
-		return m_clip;
-
-	}
+	
 
 	private Clip clip;
 	
