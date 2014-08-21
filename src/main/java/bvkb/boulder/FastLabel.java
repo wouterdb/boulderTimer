@@ -4,6 +4,11 @@ import java.awt.Toolkit;
 
 import javax.swing.JLabel;
 
+/**
+ * @author w.deborger@gmail.com
+ *
+ *label that updates as expected
+ */
 public class FastLabel extends JLabel {
 	long last;
 	
@@ -16,6 +21,8 @@ public class FastLabel extends JLabel {
 //		
 //		System.out.println(fps);
 		super.paintImmediately(x, y, w, h);
+		
+		//this is the trick!
 		Toolkit.getDefaultToolkit().sync();
 	}
 

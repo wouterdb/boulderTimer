@@ -1,5 +1,10 @@
 package bvkb.boulder;
 
+/**
+ * @author w.deborger@gmail.com
+ *
+ * action to be performed at a certain time 
+ */
 public abstract class Action {
 	
 	

@@ -1,6 +1,7 @@
 package bvkb.boulder;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -19,11 +20,21 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+/**
+ * @author w.deborger@gmail.com
+ *
+ *         Class responible for sound related functions
+ * 
+ *         1-preload all sound files listed in sound.idx 2-preload all SoundSets
+ *         from presets.idx
+ */
 public class SoundManager {
 
+	// all preset soundsets
 	public List<SoundSet> preset = new LinkedList<>();
+
+	// all available sounds, same data, different form
 	public List<Pair<String, Clip>> sounds = new LinkedList<>();
-	public List<String> soundNames = new LinkedList<>();
 	public Map<String, Clip> soundDict = new HashMap<>();
 
 	public SoundManager() {
@@ -31,29 +42,23 @@ public class SoundManager {
 	}
 
 	private void init() {
-		try {
-			loadClips();
-			loadSets();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		loadClips();
+		loadSets();
 	}
 
-	private void loadSets() throws IOException {
+	private void loadSets() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(getClass()
 				.getClassLoader().getResourceAsStream("presets.idx")));
-		String line = br.readLine();
-		while (line != null) {
-			String[] parts = line.split(" ");
-			loadPresets(parts[0], parts[1], parts[2], parts[3]);
-			line = br.readLine();
+
+		try {
+			String line = br.readLine();
+			while (line != null) {
+				String[] parts = line.split(" ");
+				loadPresets(parts[0], parts[1], parts[2], parts[3]);
+				line = br.readLine();
+			}
+		} catch (IOException e) {
+			ExceptionReporter.report(e, "presets not loaded correctly");
 		}
 
 	}
@@ -64,26 +69,30 @@ public class SoundManager {
 
 	}
 
-	private void loadClips() throws IOException, UnsupportedAudioFileException,
-			LineUnavailableException {
+	private void loadClips() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(getClass()
 				.getClassLoader().getResourceAsStream("sounds.idx")));
-		String line = br.readLine();
-		while (line != null) {
-			String[] parts = line.split(" ");
-			loadClip(parts[1], parts[0]);
-			line = br.readLine();
+		try {
+			String line = br.readLine();
+			while (line != null) {
+				String[] parts = line.split(" ");
+				loadClip(parts[1], parts[0]);
+				line = br.readLine();
+			}
+		} catch (IOException e) {
+			ExceptionReporter.report(e, "sounds not loaded correctly");
 		}
-
 	}
 
-	private void loadClip(String name, String filename)
-			throws UnsupportedAudioFileException, IOException,
-			LineUnavailableException {
-		soundNames.add(name);
-		Clip c = load(filename);
-		sounds.add(Pair.of(name, c));
-		soundDict.put(name, c);
+	private void loadClip(String name, String filename) {
+		try {
+			Clip c = load(filename);
+			sounds.add(Pair.of(name, c));
+			soundDict.put(name, c);
+		} catch (UnsupportedAudioFileException | IOException
+				| LineUnavailableException e) {
+			ExceptionReporter.report(e, "sound not loaded correctly: " +name +" " +filename);
+		}
 
 	}
 
@@ -105,7 +114,7 @@ public class SoundManager {
 				.getAudioInputStream(url);
 
 		if (audioInputStream == null)
-			throw new IllegalArgumentException("file not found: " + file);
+			throw new FileNotFoundException(file);
 
 		AudioFormat format = audioInputStream.getFormat();
 		DataLine.Info info = new DataLine.Info(Clip.class, format);
@@ -113,10 +122,6 @@ public class SoundManager {
 		m_clip.open(audioInputStream);
 		return m_clip;
 
-	}
-
-	public Clip getSound(int idx) {
-		return sounds.get(idx).getRight();
 	}
 
 	public Clip getSound(String name) {

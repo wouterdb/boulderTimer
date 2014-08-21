@@ -7,6 +7,11 @@ import java.util.regex.Pattern;
 
 import javax.swing.JTextField;
 
+/**
+ * @author w.deborger@gmail.com
+ *
+ * place where all specific formatting is collected
+ */
 public class PresentationUtil {
 
 	

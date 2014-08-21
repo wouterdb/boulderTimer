@@ -7,6 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 public class SoundSet {
 
 	private final String name;
+	
 	private final Clip c1sec;
 	private final Clip c1min;
 	private final Clip c0sec;

@@ -33,8 +33,18 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import sun.swing.DefaultLookup;
 
+/**
+ * @author w.deborger@gmail.com
+ *
+ * Class adding functionality to the control panel, which is generated using netbeans
+ */
 public class ControlPannelActive extends ControlPannel {
 
+	/**
+	 * Class for correctly rendering a combobox containing Pair<String, Clip>
+	 * 
+	 * based on sun tutorial
+	 */
 	public class ClipRenderer extends JLabel implements
 			ListCellRenderer<Pair<String, Clip>> {
 
@@ -83,19 +93,55 @@ public class ControlPannelActive extends ControlPannel {
 
 	}
 
-	private Clip beep;
-	private Clip gong;
-	private LargeScreen screen;
-	private Timer refreshtimer;
-	private Clip beepFinal;
+	/**
+	 * sounds played at respecitvely 1m, 1 and 2 s and 0s to end of rotation 
+	 */
+	private Clip sound1m;
+	private Clip sound1s;
+	private Clip sound0s;
 
+		
+	/**
+	 * timer driving all action 
+	 */
+	private SportTimer timer;
+	
+	/**
+	 * action responsible for restarting the timer
+	 */
+	private RepeatAction repeater;
+	
+	
+	
+	/**
+	 * large window displaying the time 
+	 */
+	private LargeScreen screen;
+	
+	/**
+	 * font to use in said window
+	 */
+	private Font font;
+	
+	
+	/**
+	 * timer updating this window to track the running timer
+	 */
+	private Timer refreshtimer;
+
+	
+	/**
+	 * all sound related stuff
+	 */
 	private SoundManager soundmanager = new SoundManager();
 
 	public ControlPannelActive() throws UnsupportedAudioFileException,
 			IOException, LineUnavailableException {
 		initComponents();
+		
 		setPreset(soundmanager.getPreset(0));
 		setSound(soundmanager.getPreset(0));
+		
 		font = new Font(getFont().getName(), Font.PLAIN, 400);
 
 		refreshtimer = new Timer(15, new ActionListener() {
@@ -165,20 +211,20 @@ public class ControlPannelActive extends ControlPannel {
 		});
 	}
 
-	private SportTimer timer;
-	private Font font;
-	private RepeatAction repeater;
+	
 
+	/**
+	 * start the timer!
+	 */
 	@Override
 	protected void start(ActionEvent evt) {
 		if (timer != null && timer.getTimeLeft() > 0) {
+			//already running!
 			if (!screen.isVisible())
 				screen.setVisible(true);
 			else
 				notifier.setText("already running");
-		}
-
-		else
+		}else
 			try {
 				long time = PresentationUtil
 						.getTime(inTime.getText(),
@@ -279,14 +325,14 @@ public class ControlPannelActive extends ControlPannel {
 		old1sec.setText(preset.getC1secName());
 		old0sec.setText(preset.getC0secName());
 
-		gong = preset.getC1min();
-		beep = preset.getC1sec();
-		beepFinal = preset.getC0sec();
+		sound1m = preset.getC1min();
+		sound1s = preset.getC1sec();
+		sound0s = preset.getC0sec();
 	}
 
-	private void play(JComboBox selector) {
-		int idx = selector.getSelectedIndex();
-		Clip clip = soundmanager.getSound(idx);
+	private void play(JComboBox<Pair<String,Clip>> selector) {
+		Pair<String,Clip> s = (Pair<String, Clip>) selector.getSelectedItem();
+		Clip clip = s.getValue();
 		clip.setFramePosition(0);
 		clip.start();
 
@@ -299,12 +345,12 @@ public class ControlPannelActive extends ControlPannel {
 		timer = new SportTimer(time);
 
 		for (int i = 1; i < warningCount; i++)
-			timer.add(new SoundAction(beep, (int) (time - (warningTime * i))));
+			timer.add(new SoundAction(sound1s, (int) (time - (warningTime * i))));
 
-		timer.add(new SoundAction(beepFinal, time));
+		timer.add(new SoundAction(sound0s, time));
 
 		if (time > 6000)
-			timer.add(new SoundAction(gong, time - 6000));
+			timer.add(new SoundAction(sound1m, time - 6000));
 
 		if (repeats > 0) {
 			repeater = new RepeatAction(timer, time, repeats);
