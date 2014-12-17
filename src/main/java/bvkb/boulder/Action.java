@@ -15,7 +15,7 @@ public abstract class Action {
 	private int at;
 
 	/**
-	 * <=0   => from end back
+	 * <=0   => from end back 
 	 * 
 	 * in 100th of a second
 	 * 

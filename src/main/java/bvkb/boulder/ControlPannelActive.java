@@ -6,6 +6,9 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.MatchResult;
@@ -29,6 +32,8 @@ import javax.swing.ListCellRenderer;
 import javax.swing.Timer;
 import javax.swing.border.Border;
 
+import jssc.SerialPortList;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import sun.swing.DefaultLookup;
@@ -36,7 +41,8 @@ import sun.swing.DefaultLookup;
 /**
  * @author w.deborger@gmail.com
  *
- * Class adding functionality to the control panel, which is generated using netbeans
+ *         Class adding functionality to the control panel, which is generated
+ *         using netbeans
  */
 public class ControlPannelActive extends ControlPannel {
 
@@ -94,54 +100,50 @@ public class ControlPannelActive extends ControlPannel {
 	}
 
 	/**
-	 * sounds played at respecitvely 1m, 1 and 2 s and 0s to end of rotation 
+	 * sounds played at respecitvely 1m, 1 and 2 s and 0s to end of rotation
 	 */
 	private Clip sound1m;
 	private Clip sound1s;
 	private Clip sound0s;
 
-		
 	/**
-	 * timer driving all action 
+	 * timer driving all action
 	 */
 	private SportTimer timer;
-	
+
 	/**
 	 * action responsible for restarting the timer
 	 */
 	private RepeatAction repeater;
-	
-	
-	
+
 	/**
-	 * large window displaying the time 
+	 * large window displaying the time
 	 */
 	private LargeScreen screen;
-	
+
 	/**
 	 * font to use in said window
 	 */
 	private Font font;
-	
-	
+
 	/**
 	 * timer updating this window to track the running timer
 	 */
 	private Timer refreshtimer;
 
-	
 	/**
 	 * all sound related stuff
 	 */
 	private SoundManager soundmanager = new SoundManager();
+	private SlaveTimer slavetimer;
 
 	public ControlPannelActive() throws UnsupportedAudioFileException,
 			IOException, LineUnavailableException {
 		initComponents();
-		
+
 		setPreset(soundmanager.getPreset(0));
 		setSound(soundmanager.getPreset(0));
-		
+
 		font = new Font(getFont().getName(), Font.PLAIN, 400);
 
 		refreshtimer = new Timer(15, new ActionListener() {
@@ -211,20 +213,18 @@ public class ControlPannelActive extends ControlPannel {
 		});
 	}
 
-	
-
 	/**
 	 * start the timer!
 	 */
 	@Override
 	protected void start(ActionEvent evt) {
 		if (timer != null && timer.getTimeLeft() > 0) {
-			//already running!
+			// already running!
 			if (!screen.isVisible())
 				screen.setVisible(true);
 			else
 				notifier.setText("already running");
-		}else
+		} else
 			try {
 				long time = PresentationUtil
 						.getTime(inTime.getText(),
@@ -313,11 +313,14 @@ public class ControlPannelActive extends ControlPannel {
 	}
 
 	private SoundSet collectIntoPreset() {
-		Pair<String,Clip> c1m =  ((Pair<String,Clip>)select1min.getSelectedItem());
-		Pair<String,Clip> c1s =  ((Pair<String,Clip>)select2sec.getSelectedItem());
-		Pair<String,Clip> c0s =  ((Pair<String,Clip>)select0sec.getSelectedItem());
-		return new SoundSet("",c1m,c1s,c0s);
-		
+		Pair<String, Clip> c1m = ((Pair<String, Clip>) select1min
+				.getSelectedItem());
+		Pair<String, Clip> c1s = ((Pair<String, Clip>) select2sec
+				.getSelectedItem());
+		Pair<String, Clip> c0s = ((Pair<String, Clip>) select0sec
+				.getSelectedItem());
+		return new SoundSet("", c1m, c1s, c0s);
+
 	}
 
 	private void setSound(SoundSet preset) {
@@ -330,8 +333,8 @@ public class ControlPannelActive extends ControlPannel {
 		sound0s = preset.getC0sec();
 	}
 
-	private void play(JComboBox<Pair<String,Clip>> selector) {
-		Pair<String,Clip> s = (Pair<String, Clip>) selector.getSelectedItem();
+	private void play(JComboBox<Pair<String, Clip>> selector) {
+		Pair<String, Clip> s = (Pair<String, Clip>) selector.getSelectedItem();
 		Clip clip = s.getValue();
 		clip.setFramePosition(0);
 		clip.start();
@@ -343,6 +346,7 @@ public class ControlPannelActive extends ControlPannel {
 		if (timer != null)
 			timer.stop();
 		timer = new SportTimer(time);
+		timer.setSlave(slavetimer);
 
 		for (int i = 1; i < warningCount; i++)
 			timer.add(new SoundAction(sound1s, (int) (time - (warningTime * i))));
@@ -387,6 +391,19 @@ public class ControlPannelActive extends ControlPannel {
 		return new DefaultComboBoxModel(new Vector<>(soundmanager.getSounds()));
 	}
 
+	protected ComboBoxModel<String> getSourceModel() {
+
+		return new DefaultComboBoxModel(new Vector<>(Arrays.asList(SerialPortList.getPortNames())));
+	}
+
+	protected void sourceSelectionActionPerformed(java.awt.event.ActionEvent evt) {                                                
+		String port = (String) sourceSelection.getSelectedItem();
+		this.slavetimer=new SerialSlaveTimer(port);
+		if(timer!=null)
+			timer.setSlave(slavetimer);
+			
+    }   
+	
 	protected ListCellRenderer<Pair<String, Clip>> getPresetRenderer() {
 		return new ClipRenderer();
 	}
