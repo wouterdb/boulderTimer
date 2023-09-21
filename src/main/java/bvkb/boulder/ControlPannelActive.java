@@ -1,37 +1,16 @@
 package bvkb.boulder;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.Vector;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.Icon;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
-import javax.swing.Timer;
-import javax.swing.border.Border;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.Vector;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import sun.swing.DefaultLookup;
 
 /**
  * @author w.deborger@gmail.com
@@ -66,10 +45,8 @@ public class ControlPannelActive extends ControlPannel {
 			if (dropLocation != null && !dropLocation.isInsert()
 					&& dropLocation.getIndex() == index) {
 
-				bg = DefaultLookup
-						.getColor(this, ui, "List.dropCellBackground");
-				fg = DefaultLookup
-						.getColor(this, ui, "List.dropCellForeground");
+				bg = javax.swing.UIManager.getColor("List.dropCellBackground");
+				fg = javax.swing.UIManager.getColor("List.dropCellForeground");
 
 				isSelected = true;
 			}
@@ -127,13 +104,13 @@ public class ControlPannelActive extends ControlPannel {
 	/**
 	 * timer updating this window to track the running timer
 	 */
-	private Timer refreshtimer;
+	private final Timer refreshtimer;
 
 	
 	/**
 	 * all sound related stuff
 	 */
-	private SoundManager soundmanager = new SoundManager();
+	private final SoundManager soundmanager = new SoundManager();
 
 	public ControlPannelActive() throws UnsupportedAudioFileException,
 			IOException, LineUnavailableException {
@@ -144,14 +121,7 @@ public class ControlPannelActive extends ControlPannel {
 		
 		font = new Font(getFont().getName(), Font.PLAIN, 400);
 
-		refreshtimer = new Timer(15, new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				updateValues();
-
-			}
-		});
+		refreshtimer = new Timer(15, e -> updateValues());
 		refreshtimer.start();
 	}
 
@@ -168,7 +138,7 @@ public class ControlPannelActive extends ControlPannel {
 
 	}
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
 					.getInstalledLookAndFeels()) {
@@ -177,38 +147,22 @@ public class ControlPannelActive extends ControlPannel {
 					break;
 				}
 			}
-		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(ControlPannel.class.getName())
-					.log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(ControlPannel.class.getName())
-					.log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(ControlPannel.class.getName())
-					.log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+		} catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException |
+                 IllegalAccessException ex) {
 			java.util.logging.Logger.getLogger(ControlPannel.class.getName())
 					.log(java.util.logging.Level.SEVERE, null, ex);
 		}
-		// </editor-fold>
+        // </editor-fold>
 
 		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new ControlPannelActive().setVisible(true);
-				} catch (UnsupportedAudioFileException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (LineUnavailableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+		java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new ControlPannelActive().setVisible(true);
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+});
 	}
 
 	
@@ -379,12 +333,12 @@ public class ControlPannelActive extends ControlPannel {
 	}
 
 	@Override
-	protected ComboBoxModel getPresetModel() {
+	protected ComboBoxModel<String> getPresetModel() {
 		return new DefaultComboBoxModel<String>(soundmanager.getPresetNames());
 	}
 
 	protected ComboBoxModel<Pair<String, Clip>> getSoundModel() {
-		return new DefaultComboBoxModel(new Vector<>(soundmanager.getSounds()));
+		return new DefaultComboBoxModel<>(new Vector<>(soundmanager.getSounds()));
 	}
 
 	protected ListCellRenderer<Pair<String, Clip>> getPresetRenderer() {

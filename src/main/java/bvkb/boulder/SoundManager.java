@@ -107,7 +107,7 @@ public class SoundManager {
 	public static Clip load(String file) throws UnsupportedAudioFileException,
 			IOException, LineUnavailableException {
 		// InputStream inps = .getResourceAsStream(file);
-
+		System.out.println("LOADING: " + file);
 		URL url = SoundAction.class.getClassLoader().getResource(file);
 
 		AudioInputStream audioInputStream = AudioSystem

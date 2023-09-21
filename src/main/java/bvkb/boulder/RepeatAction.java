@@ -2,7 +2,7 @@ package bvkb.boulder;
 
 public class RepeatAction extends Action{
 
-	private SportTimer target;
+	private final SportTimer target;
 	private int count;
 
 	public RepeatAction(SportTimer target, int at, int count) {

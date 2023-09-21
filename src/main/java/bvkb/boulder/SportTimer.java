@@ -9,7 +9,7 @@ public class SportTimer {
 
 	public class ActionTask extends TimerTask {
 
-		private Action action;
+		private final Action action;
 
 		public ActionTask(Action action) {
 			this.action = action;
@@ -26,8 +26,8 @@ public class SportTimer {
 	private long startTime;
 	private long stopTime;
 	private Timer t = new Timer();
-	private List<Action> actions;
-	private int period;
+	private final List<Action> actions;
+	private final int period;
 
 	public SportTimer(int period, List<Action> actions) {
 		this.period = period;
@@ -55,10 +55,8 @@ public class SportTimer {
 	 */
 	public int getTimeLeft() {
 		int nr =  (int) ((stopTime- System.currentTimeMillis()) / 10);
-		if(nr<0)
-			return 0;
-		return nr;
-	}
+        return Math.max(nr, 0);
+    }
 	
 	
 	public void start(){

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>bvkb.boulder</groupId>
 	<artifactId>Timer</artifactId>
-	<version>0.2.0-SNAPSHOT</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>com.l2fprod.common</groupId>
@@ -17,21 +17,14 @@
 			<version>3.3.2</version>
 		</dependency>
 	</dependencies>
-	<distributionManagement>
-		<repository>
-			<id>ssh-repository</id>
-			<url>scpexe://wouterdb@waldorf.cs.kuleuven.be/public_html/klimax</url>
-		</repository>
-	</distributionManagement>
-
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>15</source>
+					<target>15</target>
 				</configuration>
 			</plugin>
 			<plugin>

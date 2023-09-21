@@ -7,8 +7,7 @@
 package bvkb.boulder;
 
 import javax.sound.sampled.Clip;
-import javax.swing.ComboBoxModel;
-import javax.swing.ListCellRenderer;
+import javax.swing.*;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -50,7 +49,7 @@ public class ControlPannel extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         fontButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        preset = new javax.swing.JComboBox();
+        preset = new javax.swing.JComboBox<String>();
         jLabel2 = new javax.swing.JLabel();
         select1min = new javax.swing.JComboBox<Pair<String,Clip>>();
         select2sec = new javax.swing.JComboBox<Pair<String,Clip>>();
@@ -79,18 +78,10 @@ public class ControlPannel extends javax.swing.JFrame {
         notifier.setEditable(false);
 
         jButton1.setText("Start");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                start(evt);
-            }
-        });
+        jButton1.addActionListener(this::start);
 
         jButton3.setText("Stop");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                stop(evt);
-            }
-        });
+        jButton3.addActionListener(this::stop);
 
         outTime.setEditable(false);
         outTime.setColumns(8);
@@ -98,11 +89,7 @@ public class ControlPannel extends javax.swing.JFrame {
         jLabel4.setText("repeats");
 
         jButton4.setText("Stop after this");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                stopRepeat(evt);
-            }
-        });
+        jButton4.addActionListener(this::stopRepeat);
 
         outRepeats.setEditable(false);
         outRepeats.setColumns(8);
@@ -167,11 +154,7 @@ public class ControlPannel extends javax.swing.JFrame {
         jTabbedPane1.addTab("main", jPanel1);
 
         fontButton.setText("Font");
-        fontButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fontButtonActionPerformed(evt);
-            }
-        });
+        fontButton.addActionListener(this::fontButtonActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -197,11 +180,7 @@ public class ControlPannel extends javax.swing.JFrame {
         jTabbedPane1.addTab("font", jPanel2);
 
         preset.setModel(getPresetModel());
-        preset.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                presetActionPerformed(evt);
-            }
-        });
+        preset.addActionListener(this::presetActionPerformed);
 
         jLabel2.setText("preset");
 
@@ -227,32 +206,16 @@ public class ControlPannel extends javax.swing.JFrame {
         old0sec.setText("jTextField1");
 
         play1M.setText("play");
-        play1M.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                play1MActionPerformed(evt);
-            }
-        });
+        play1M.addActionListener(this::play1MActionPerformed);
 
         playFinal.setText("play");
-        playFinal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                playFinalActionPerformed(evt);
-            }
-        });
+        playFinal.addActionListener(this::playFinalActionPerformed);
 
         play1Sec.setText("play");
-        play1Sec.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                play1SecActionPerformed(evt);
-            }
-        });
+        play1Sec.addActionListener(this::play1SecActionPerformed);
 
         setSounds.setText("Set");
-        setSounds.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setSoundsActionPerformed(evt);
-            }
-        });
+        setSounds.addActionListener(this::setSoundsActionPerformed);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -373,7 +336,7 @@ public class ControlPannel extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -386,23 +349,14 @@ public class ControlPannel extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ControlPannel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ControlPannel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ControlPannel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ControlPannel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ControlPannel().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new ControlPannel().setVisible(true));
     }
 
     // Variables declaration - do not modify                     
@@ -431,14 +385,14 @@ public class ControlPannel extends javax.swing.JFrame {
     private javax.swing.JButton play1M;
     private javax.swing.JButton play1Sec;
     private javax.swing.JButton playFinal;
-    protected javax.swing.JComboBox preset;
+    protected javax.swing.JComboBox<String> preset;
     protected javax.swing.JComboBox<Pair<String,Clip>> select0sec;
     protected javax.swing.JComboBox<Pair<String,Clip>> select1min;
     protected javax.swing.JComboBox<Pair<String,Clip>> select2sec;
     private javax.swing.JButton setSounds;
     // End of variables declaration                   
 
-    protected ComboBoxModel getPresetModel() {
+    protected ComboBoxModel<String> getPresetModel() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

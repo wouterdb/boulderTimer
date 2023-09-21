@@ -27,8 +27,8 @@ public class PresentationUtil {
 	}
 	
 	
-	private static String[] timeNames = new String[]    {	"m","s","h"};
-	private static TimeUnit[] times = new TimeUnit[]	 {	TimeUnit.MINUTES, TimeUnit.SECONDS, TimeUnit.HOURS};
+	private static final String[] timeNames = new String[]    {	"m","s","h"};
+	private static final TimeUnit[] times = new TimeUnit[]	 {	TimeUnit.MINUTES, TimeUnit.SECONDS, TimeUnit.HOURS};
 	private final static Pattern timepattern = Pattern.compile("([0-9.,]+)([a-zA-Z ]*)");
 	
 	public static long getTime(String input, String msg) {

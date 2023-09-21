@@ -12,15 +12,12 @@ public abstract class Action {
 		this.at=at;
 	}
 
-	private int at;
+	private final int at;
 
 	/**
 	 * <=0   => from end back
 	 * 
 	 * in 100th of a second
-	 * 
-	 * @return
-	 * 
 	 */
 	public int at() {
 		return at;
