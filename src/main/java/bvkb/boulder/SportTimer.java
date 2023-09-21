@@ -62,7 +62,7 @@ public class SportTimer {
 	public void start(){
 		long now = System.currentTimeMillis();
 		startTime = now;
-		stopTime=now+10*period;
+		stopTime=now+10L*period;
 		t.cancel();
 		t = new Timer();
 		loadActions();

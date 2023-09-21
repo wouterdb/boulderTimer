@@ -5,8 +5,6 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JTextField;
-
 /**
  * @author w.deborger@gmail.com
  *

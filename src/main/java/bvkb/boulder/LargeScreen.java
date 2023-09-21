@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.border.EmptyBorder;
 
 public class LargeScreen extends JFrame implements ActionListener {
 
@@ -26,19 +25,17 @@ public class LargeScreen extends JFrame implements ActionListener {
 	 */
 	public static void main(String[] args) {
 		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				
-				try {
-					SportTimer spt = new SportTimer(100000);
-					spt.start();
-					LargeScreen frame = new LargeScreen(spt);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		EventQueue.invokeLater(() -> {
+
+            try {
+                SportTimer spt = new SportTimer(100000);
+                spt.start();
+                LargeScreen frame = new LargeScreen(spt);
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 	}
 
 	/**
